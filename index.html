@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr" prefix="og: http://ogp.me/ns#" id="top-of-site">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
+
+    <link rel="stylesheet" href="css\stylesheet.min.1f7a724543d1dbd2cfee5e4fdb6627a7efb728157c3bea075a1e36878b6c8478.css">
+    <script src="/js/common.js"></script>
+
+    <script type="text/javascript"
+                async
+                src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+        MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [['$','$'], ['\\(','\\)']],
+            displayMath: [['$$','$$'], ['\[\[','\]\]']],
+            processEscapes: true,
+            processEnvironments: true,
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre'],
+            TeX: { equationNumbers: { autoNumber: "AMS" },
+                extensions: ["AMSmath.js", "AMSsymbols.js"] }
+        }
+        });
+
+        </script>
+
+</head>
+
+ 
+            <main class="container content" id="main">
+                <article class="under review" role="document" lang="es">
+    <header>
+        <h1 class="text-title">
+            Evil Operation: Breaking Speaker Recognition with PaddingBack
+        </h1>
+        <div class="byline">
+            <span>
+                
+
+
+Published on
+<time datetime="2023-08-08T00:00:00Z">
+    Aug 08, 2023
+</time>
+
+
+    <span class="author">by Zhe Ye</span>
+
+
+            </span>
+            <span>
+                <!-- under review -->
+            </span>
+        </div>
+    </header>
+
+    <div class="under review-body">
+
+<br><p><strong>Why we named it PaddingBack</strong>: <font style="color:#0000FF">Padding</font> <font style="color:#0000FF">Ba</font>ckdoor Atta<font style="color:#0000FF">ck</font>
+<br><p><strong>Abstract</strong>: Machine Learning as a Service (MLaaS) has gained popularity due to advancements in machine learning. However, untrusted third-party platforms have raised concerns about AI security, particularly in backdoor attacks. Recent research has shown that speech backdoors can utilize transformations as triggers, similar to image backdoors. However, human ears easily detect these transformations, leading to suspicion. In this paper, we introduce PaddingBack, an inaudible backdoor attack that utilizes malicious operations to make poisoned samples indistinguishable from clean ones. Instead of using external perturbations as triggers, we exploit the widely used speech signal operation, padding, to break speaker recognition systems. Our experimental results demonstrate the effectiveness of the proposed approach, achieving a significantly high attack success rate while maintaining a high rate of benign accuracy. Moreover, PaddingBack is capable of resisting defense methods.</p>
+<p><strong>Index terms</strong>: MLaaS, SRSs, backdoor attacks, PaddingBack
+<center>
+
+<br>
+<img src="./figure/pipeline.png" alt="audio system" width="60%">
+</center>
+
+<h2 id="Framework">Framework</h2>
+<p> Shirts with different colors indicate different speakers, and the yellow shirt is the label specified by the adversary. During the training phase, adversaries randomly select $\rho\%$ samples to generate poisoned samples by adding triggers and changing their labels to those specified by the adversary. Then the poisoned and remaining samples are combined to create a backdoor dataset for the victim to train the model. During the inference phase, the adversary can activate model backdoors by padding a specific length, causing model predictions to be manipulated towards the adversary-specified label. Additionally, any clean samples will still be correctly classified as ground-truth labels.</p>
+
+
+
+<hr>
+<h2 id="Stealthiness Test">Stealthiness Experiment: Poisoned Speech Visualization </h2>
+<p>We visualized a comparison between our method and existing speech backdoor attack:</p>
+<table style="text-align:center; vertical-align:middle; font-size: 18px;">
+
+
+
+<tr>
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Clean_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Clean_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">Clean</p>
+        </div>
+    </td>
+
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PhaseBack_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PhaseBack_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">PhaseBack</p>
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Style 3_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Style 3_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">Style 3</p>
+        </div>
+    </td>
+
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Style 5_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/Style 5_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">Style 5</p>
+        </div>
+    </td>
+</tr>
+
+<tr>
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PaddingBack-c_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PaddingBack-c_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">PaddingBack-C</p>
+        </div>
+    </td>
+
+    <td>
+        <div style="text-align: center;">
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PaddingBack-w_wave.png">
+                </div>
+                <div style="width: 280px;">
+                    <img width="280" height="210" src="./figure/PaddingBack-w_spec.png">
+                </div>
+            </div>
+            <p style="font-size: large; text-align: center;">PaddingBack-W</p>
+        </div>
+    </td>
+</tr>
+
+</div>
+</td>
+    </tr>
+</table>
+<p>According to both the visualization results, we can observe that:</p>
+<ul>
+<li>From the visualized results, it can be observed that the previous operation-based speech backdoor attack methods lacked sufficient stealthiness, resulting in noticeable distortion of the poisoned samples.
+<li>Our proposed method, as depicted by the visualizations, renders the poisoned speech nearly indistinguishable from the original speech, showcasing a high degree of stealthiness.
+</ul>
+<hr>
+
+<style>
+    .no-wrap {
+        white-space: nowrap;
+    }
+</style>
+
+<h2 id="Stealthiness Experiment: Subjective Auditory Test">Stealthiness Experiment: Subjective Auditory Test</em></h2>
+<table style="text-align:center; vertical-align:middle; font-size: 18px;">
+    <tr>
+        <td>Speech</td>
+        <td class="no-wrap"><i>id10002\C7k7C-<br>PDvAA\00002.wav</i></td>
+        <td class="no-wrap"><i>id11243\6-oQl<br>SgLiFw\00004.wav</i></td>
+        <td><i>id10059\8UMex<br>HeqYH0\00001.wav</i></td>
+        <td><i>54-121080-0001</i></td>
+        <td><i>439-123866-0009.wav</i></td>
+    </tr>
+    <tr>
+        <td>Original sample</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set1/clean.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set2/clean.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set3/clean.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set4/clean.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set5/clean.wav">
+</audio>
+</center>
+</td>
+    </tr>
+
+    <tr>
+        <td>PhaseBack</td>
+        <td>
+<center>
+<audio controls class="audio-mini">
+    <source src="./audio/set1/phaseback.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set2/phaseback.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set3/phaseback.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set4/phaseback.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set5/phaseback.wav">
+</audio>
+</center>
+</td>    </tr>
+    <tr>
+        <td>Style 3</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set1/style 3.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set2/style 3.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set3/style 3.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set4/style 3.wav">
+</audio>
+</center>
+</td>
+        <td>
+<center>
+    <audio controls class="audio-mini">
+    <source src="./audio/set5/style 3.wav">
+</audio>
+</center>
+</td>    </tr>
+
+<tr>
+    <td>Style 5</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set1/style 5.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set2/style 5.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set3/style 5.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set4/style 5.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set5/style 5.wav">
+</audio>
+</center>
+</td>
+</tr>
+
+<tr>
+    <td>PaddingBack-C</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set1/padding_c.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set2/padding_c.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set3/padding_c.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set4/padding_c.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set5/padding_c.wav">
+</audio>
+</center>
+</td>
+</tr>
+
+<tr>
+    <td>PaddingBack-W</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set1/padding_w.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set2/padding_w.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set3/padding_w.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set4/padding_w.wav">
+</audio>
+</center>
+</td>
+    <td>
+<center>
+<audio controls class="audio-mini">
+<source src="./audio/set5/padding_w.wav">
+</audio>
+</center>
+</td>
+</tr>
+
+</table>
+
+<p>According to subjective auditory test, we can observe that:</p>
+<ul>
+<li>Previous operation-based speech backdoor attack methods will lead to noticeable degradation in the poisoned audio, making them susceptible to human auditory detection and posing a risk of exposure.
+<li>Our proposed operation-based speech backdoor attack method, renders the poisoned audio nearly indistinguishable from the original audio. Similar to PhaseBack, it can be considered an inaudible backdoor attack strategy.
+</ul>
+
+
+
+<footer>
+    <p style="text-align: center; font-size: 12px;">Powered by <a href="https://github.com/sergeyklay/gohugo-theme-ed">Hugo Ed</a>.</p>
+</footer>
+</article>
+
+
+
